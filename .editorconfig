@@ -1,0 +1,15 @@
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+insert_final_newline = true
+
+# 2 spaces indentation
+[*]
+indent_style = space
+indent_size = 2
+
+# Default charset
+[*]
+charset = utf-8
