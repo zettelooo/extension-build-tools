@@ -70,16 +70,7 @@ $ npm install
 ```
 
 It's recommended to use **VS Code** to develop this project.
-You need to have **Prettier** and **ESLint** extensions to be installed on your IDE.
-This project uses a modified version of the **Airbnb** style.
-
-> Linting will be called _automatically_ before committing. Any linting error will abort the process. Therefore, you possibly need to lint the staged changes manualy before trying to commit them yourself and fix all the errors and as much as possible of warnings first.
-
-Lint check before commit:
-
-```bash
-$ npm run lint-staged   # Alternatively:   $ npm run .l
-```
+You need to have **Prettier** extension to be installed on your IDE.
 
 ## Publication
 
@@ -120,7 +111,6 @@ Summarize the size of the code base in lines of code:
 ```bash
 $ npm run status
 ```
-
 
 ------------------
 

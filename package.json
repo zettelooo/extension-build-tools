@@ -3,7 +3,7 @@
   "description": "Zettel: Extension build helper tools",
   "version": "1.0.1",
   "files": [
-    "src/**/*"
+    "src/**"
   ],
   "main": "src/index.js",
   "types": "src/index.d.ts",
