@@ -79,13 +79,15 @@ yargs(hideBin(process.argv))
         })
         .map(
           upgrade =>
-            `${upgrade.name}\t${upgrade.oldVersion}${
-              upgrade.newVersion ? ` \u2192 ${upgrade.newVersion}` : 'Up to date'
-            }` // → Rightwards arrow
+            `\u2022 ${upgrade.name}\t${upgrade.oldVersion}${
+              upgrade.newVersion && upgrade.newVersion !== upgrade.oldVersion
+                ? ` \u21D2 ${upgrade.newVersion}`
+                : ' \u2713'
+            }` // • Bullet, ⇒ Rightwards double arrow, ✓ Check mark
         )
         .join('\n')
       console.log(upgrades ? upgrades : 'No official dependencies are found.')
-      console.log('Done \u2713') // ✓ Check mark
+      console.log('Done \u2714') // ✔ Heavy check mark
     }
   )
 
