@@ -6,10 +6,10 @@ const JSZip = require('jszip')
 const path = require('path')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
-const { throwError, ensureFolder } = require('./utilities')
-const { formatVersion, parseVersion, upgradeVersion, findVersion } = require('./versioning')
-const { findOfficialDependencies } = require('./official')
 const { loadRcFile } = require('./config')
+const { findOfficialDependencies } = require('./official')
+const { throwError, ensureFolder } = require('./utilities')
+const { findVersion, formatVersion, parseVersion, upgradeVersion } = require('./versioning')
 
 const rcConfig = loadRcFile()
 const defaultConfig = {
@@ -52,24 +52,40 @@ yargs(hideBin(process.argv))
     argv => argv,
     args => {
       const rootPath = path.join(process.cwd(), args.r || defaultConfig.paths.root)
-      const officialDependencies = findOfficialDependencies(rootPath)
-      officialDependencies.forEach(officialDependency => {
-        console.log(`Upgrading "${officialDependency.name}"...`)
-        try {
-          const stdout = childProcess.execSync(
-            `npm install ${officialDependency.type === 'development' ? '-D' : ''} ${officialDependency.name}@latest`,
-            {
-              cwd: rootPath,
-              encoding: 'utf8',
-              stdio: 'ignore',
-            }
-          )
-          // console.log(stdout)
-        } catch ({ stderr }) {
-          throwError(stderr)
-        }
-      })
-      console.log('All official dependencies are ensured to be the latest versions.')
+      const oldOfficialDependencies = findOfficialDependencies(rootPath)
+      console.log('Checking and upgrading official dependencies...')
+      try {
+        const stdout = childProcess.execSync(
+          `npm install ${oldOfficialDependencies.map(dependency => `${dependency.name}@latest`).join(' ')}`,
+          {
+            cwd: rootPath,
+            encoding: 'utf8',
+            stdio: 'ignore',
+          }
+        )
+        // console.log(stdout)
+      } catch ({ stderr }) {
+        throwError(stderr)
+      }
+      const newOfficialDependencies = findOfficialDependencies(rootPath)
+      const upgrades = oldOfficialDependencies
+        .map(oldDependency => {
+          const newDependency = newOfficialDependencies.find(dependency => dependency.name === oldDependency.name)
+          return {
+            name: oldDependency.name,
+            oldVersion: oldDependency.version,
+            newVersion: newDependency?.version,
+          }
+        })
+        .map(
+          upgrade =>
+            `${upgrade.name}\t${upgrade.oldVersion}${
+              upgrade.newVersion ? ` \u2192 ${upgrade.newVersion}` : 'Up to date'
+            }` // → Rightwards arrow
+        )
+        .join('\n')
+      console.log(upgrades ? upgrades : 'No official dependencies are found.')
+      console.log('Done \u2713') // ✓ Check mark
     }
   )
 
@@ -141,10 +157,9 @@ yargs(hideBin(process.argv))
 
         const officialDependencies = findOfficialDependencies(rootPath)
         const metadata = { officialDependencies: {} }
-        officialDependencies.forEach(officialDependency => {
-          metadata.officialDependencies[officialDependency.name.split('/')[1]] = officialDependency.version
+        officialDependencies.forEach(dependency => {
+          metadata.officialDependencies[dependency.name.split('/')[1]] = dependency.version
         })
-        metadata.dependencies = metadata.officialDependencies // TODO: Remove it after making sure this deprecated field is not being used anymore
         zippedPack.file('metadata.json', JSON.stringify(metadata, null, 2))
 
         function walkFolder(folderPath, zip) {
