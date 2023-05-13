@@ -56,7 +56,7 @@ yargs(hideBin(process.argv))
       console.log('Checking and upgrading official dependencies...')
       try {
         const stdout = childProcess.execSync(
-          `npm install ${oldOfficialDependencies.map(dependency => `${dependency.name}@latest`).join(' ')}`,
+          `npm install --force ${oldOfficialDependencies.map(dependency => `${dependency.name}@latest`).join(' ')}`,
           {
             cwd: rootPath,
             encoding: 'utf8',
