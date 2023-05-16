@@ -11,7 +11,7 @@ const { findOfficialDependencies } = require('./official')
 const { throwError, ensureFolder } = require('./utilities')
 const { findVersion, formatVersion, parseVersion, upgradeVersion } = require('./versioning')
 
-const rcConfig = loadRcFile()
+const rcConfig = loadRcFile('zettelebt')
 const defaultConfig = {
   paths: {
     root: rcConfig.paths?.root || '.',

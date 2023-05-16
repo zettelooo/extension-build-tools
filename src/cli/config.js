@@ -2,9 +2,9 @@ const path = require('path')
 const { rcFile } = require('rc-config-loader')
 const { throwError } = require('./utilities')
 
-function loadRcFile() {
+function loadRcFile(rcFileName) {
   try {
-    const results = rcFile('zettelebt')
+    const results = rcFile(rcFileName)
     return results?.config ?? {}
   } catch (error) {
     throwError(error)
