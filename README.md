@@ -5,7 +5,7 @@ Build and helper tools for extension development.
 ## Installation
 
 ```bash
-$ npm install --save-dev @zettelyay/extension-build-tools
+$ npm install --save-dev @zettelooo/extension-build-tools
 ```
 
 ## Usage
@@ -16,13 +16,7 @@ You can use it to speed up a couple of tasks while developing Zettel extensions.
 See help:
 
 ```bash
-$ zettel-ebt help   # / h
-```
-
-Upgrade Zettel's official dependencies:
-
-```bash
-$ zettel-ebt upgrade
+$ zettel-ebt --help   # / -h
 ```
 
 Version extension's manifest:
@@ -35,12 +29,6 @@ Pack and zip extension's files:
 
 ```bash
 $ zettel-ebt pack
-```
-
-See build tools version:
-
-```bash
-$ zettel-ebt version   # / v
 ```
 
 ## Configuration
@@ -59,7 +47,7 @@ You may provide the following configuration parameters either as the CLI command
 Clone the repository locally:
 
 ```bash
-$ git clone https://github.com/zettelyay/extension-build-tools.git
+$ git clone git@github.com:zettelooo/extension-build-tools.git
 ```
 
 Install the dependencies:
@@ -85,31 +73,10 @@ $ npm version patch   # / minor / major / any other valid semantic version
 
 ## Misc
 
-Check for all the updates available on the dependencies:
+You can use the following NPM script to access [Zettel Build Tools](https://github.com/zettelooo/build-tools#usage):
 
 ```bash
-$ npm run updates.check
-```
-
-Upgrade all the dependencies to their very latest versions:
-
-```bash
-$ npm run updates.install
-```
-
-View GIT history visualized:
-
-```bash
-$ npm run gource
-```
-
-> You probably need to install `gource` locally first.<br/>
-See [this link](https://gource.io/).
-
-Summarize the size of the code base in lines of code:
-
-```bash
-$ npm run status
+$ npm run bt -- <command>   # e.g.: npm run bt - update
 ```
 
 ------------------

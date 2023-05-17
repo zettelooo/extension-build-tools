@@ -1,33 +1,30 @@
 {
-  "name": "@zettelyay/extension-build-tools",
+  "name": "@zettelooo/extension-build-tools",
   "description": "Zettel: Extension build helper tools",
   "version": "1.0.5",
   "files": [
     "src/**"
   ],
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "types": "./src/index.d.ts",
+  "main": "./src/index.js",
+  "exports": "./src/index.js",
   "bin": {
     "zettel-ebt": "./src/cli/index.js"
   },
   "scripts": {
-    "updates.check": "ncu",
-    "updates.install": "rimraf package-lock.json && ncu --upgrade && npm install",
-    "preversion": "git-branch-is master",
-    "postversion": "git push --follow-tags",
-    "gource": "gource --seconds-per-day 0.35 --auto-skip-seconds 0.1 --file-idle-time 0 --max-file-lag 1",
-    "status": "sloc src/",
+    ".": "node ./src/cli/index.js",
+    "u": "zettel-bt update",
+    "bt": "zettel-bt",
+    "preversion": "zettel-bt preversion",
+    "postversion": "zettel-bt postversion",
     "test": "echo \"No test yet.\""
   },
   "dependencies": {
     "jszip": "^3.10.1",
-    "rc-config-loader": "^4.1.2",
     "yargs": "^17.7.2"
   },
-  "devDependencies": {
-    "git-branch-is": "^4.0.0",
-    "npm-check-updates": "^16.10.9",
-    "rimraf": "^5.0.0"
+  "peerDependencies": {
+    "@zettelooo/build-tools": "^1.2.3"
   },
   "license": "ISC",
   "keywords": [
@@ -44,6 +41,6 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/zettelyay/extension-build-tools"
+    "url": "https://github.com/zettelooo/extension-build-tools"
   }
 }

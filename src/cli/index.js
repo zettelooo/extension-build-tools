@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-const childProcess = require('child_process')
+const { loadRcFile } = require('@zettelooo/build-tools/lib/config')
+const { findOfficialDependencies } = require('@zettelooo/build-tools/lib/official')
+const { throwError, ensureFolder } = require('@zettelooo/build-tools/lib/utilities')
+const { findVersion, formatVersion, parseVersion, upgradeVersion } = require('@zettelooo/build-tools/lib/versioning')
+console.log(...[...[typeof loadRcFile, loadRcFile].reverse(), 'typeof loadRcFile, loadRcFile ='].reverse()) //!Delete it
 const fs = require('fs')
 const JSZip = require('jszip')
 const path = require('path')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
-const { loadRcFile } = require('./config')
-const { findOfficialDependencies } = require('./official')
-const { throwError, ensureFolder } = require('./utilities')
-const { findVersion, formatVersion, parseVersion, upgradeVersion } = require('./versioning')
 
 const rcConfig = loadRcFile('zettelebt')
 const defaultConfig = {
@@ -45,51 +45,6 @@ yargs(hideBin(process.argv))
     describe: 'Dist folder relative path to root, to place the packed content, defaults to "out"',
     type: 'string',
   })
-
-  .command(
-    'upgrade',
-    'Upgrades all official Zettel dependencies',
-    argv => argv,
-    args => {
-      const rootPath = path.join(process.cwd(), args.r || defaultConfig.paths.root)
-      const oldOfficialDependencies = findOfficialDependencies(rootPath)
-      console.log('Checking and upgrading official dependencies...')
-      try {
-        const stdout = childProcess.execSync(
-          `npm install --force ${oldOfficialDependencies.map(dependency => `${dependency.name}@latest`).join(' ')}`,
-          {
-            cwd: rootPath,
-            encoding: 'utf8',
-            stdio: 'ignore',
-          }
-        )
-        // console.log(stdout)
-      } catch ({ stderr }) {
-        throwError(stderr)
-      }
-      const newOfficialDependencies = findOfficialDependencies(rootPath)
-      const upgrades = oldOfficialDependencies
-        .map(oldDependency => {
-          const newDependency = newOfficialDependencies.find(dependency => dependency.name === oldDependency.name)
-          return {
-            name: oldDependency.name,
-            oldVersion: oldDependency.version,
-            newVersion: newDependency?.version,
-          }
-        })
-        .map(
-          upgrade =>
-            `\u2022 ${upgrade.name}\t${upgrade.oldVersion}${
-              upgrade.newVersion && upgrade.newVersion !== upgrade.oldVersion
-                ? ` \u21D2 ${upgrade.newVersion}`
-                : ' \u2713'
-            }` // • Bullet, ⇒ Rightwards double arrow, ✓ Check mark
-        )
-        .join('\n')
-      console.log(upgrades ? upgrades : 'No official dependencies are found.')
-      console.log('Done \u2714') // ✔ Heavy check mark
-    }
-  )
 
   .command('version [version]', 'Increases the version of the extension in manifest', argv => {
     return argv
