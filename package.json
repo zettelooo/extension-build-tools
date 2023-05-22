@@ -1,7 +1,7 @@
 {
   "name": "@zettelooo/extension-build-tools",
   "description": "Zettel: Extension build helper tools",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "files": [
     "src/**"
   ],
