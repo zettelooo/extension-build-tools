@@ -4,6 +4,7 @@ const { loadRcFile } = require('@zettelooo/build-tools/lib/config')
 const { findOfficialDependencies } = require('@zettelooo/build-tools/lib/official')
 const { throwError, ensureFolder } = require('@zettelooo/build-tools/lib/utilities')
 const { findVersion, formatVersion, parseVersion, upgradeVersion } = require('@zettelooo/build-tools/lib/versioning')
+const { default: axios } = require('axios')
 const fs = require('fs')
 const JSZip = require('jszip')
 const path = require('path')
@@ -180,20 +181,14 @@ yargs(hideBin(process.argv))
         const rootPath = path.join(process.cwd(), args.r || defaultConfig.paths.root)
         const outPath = path.join(rootPath, args.o || defaultConfig.paths.out)
         const { FormData } = await import('formdata-node')
-        const { default: fetch } = await import('node-fetch')
+        const { fileFromPath } = await import('formdata-node/file-from-path')
         const formData = new FormData()
-        formData.set('packed', fs.createReadStream(path.join(outPath, 'packed.zip')))
-        const response = await fetch(uploadUrlsByTargetEnvironment[targetEnvironment], {
-          method: 'POST',
-          body: formData,
+        formData.set('packed', await fileFromPath(path.join(outPath, 'packed.zip')))
+        await axios.post(uploadUrlsByTargetEnvironment[targetEnvironment], formData, {
           headers: {
             'X-Developer-Access-Key': developerAccessKey,
           },
         })
-        if (!response.ok) {
-          const message = await response.text()
-          throw Error(message)
-        }
         console.log(`Extension packed file "packed.zip" is uploaded to "${targetEnvironment}" successfully!`)
       } catch (error) {
         throwError(error)
