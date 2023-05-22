@@ -4,7 +4,6 @@ const { loadRcFile } = require('@zettelooo/build-tools/lib/config')
 const { findOfficialDependencies } = require('@zettelooo/build-tools/lib/official')
 const { throwError, ensureFolder } = require('@zettelooo/build-tools/lib/utilities')
 const { findVersion, formatVersion, parseVersion, upgradeVersion } = require('@zettelooo/build-tools/lib/versioning')
-console.log(...[...[typeof loadRcFile, loadRcFile].reverse(), 'typeof loadRcFile, loadRcFile ='].reverse()) //!Delete it
 const fs = require('fs')
 const JSZip = require('jszip')
 const path = require('path')
@@ -88,7 +87,7 @@ yargs(hideBin(process.argv))
         const upgradedVersion = formatVersion(upgradeVersion(parseVersion(version), versioning))
         const newManifest = `${manifest.slice(0, index)}${upgradedVersion}${manifest.slice(index + version.length)}`
         fs.writeFileSync(manifestPath, newManifest, 'utf-8')
-        console.log(`Upgraded to version "${upgradedVersion}" successfully.`)
+        console.log(`Upgraded to version "${upgradedVersion}" successfully!`)
       } catch (error) {
         throwError(error)
       }
@@ -142,7 +141,60 @@ yargs(hideBin(process.argv))
             .on('error', reject)
         })
 
-        console.log(`Extension packed file "packed.zip" is created under the configured out folder successfully.`)
+        console.log(`Extension packed file "packed.zip" is created under the configured out folder successfully!`)
+      } catch (error) {
+        throwError(error)
+      }
+    }
+  )
+
+  .command(
+    'upload',
+    'Uploads the packed zipped file to the target environment, uses environment variables ZETTEL_TARGET_ENVIRONMENT and ZETTEL_DEVELOPER_ACCESS_KEY.',
+    argv => argv,
+    async args => {
+      try {
+        const officialDependencyServerSharedVersion = '3.0.0'
+        const uploadEndPointPath = `/${officialDependencyServerSharedVersion}/developer/upload-extension`
+        const uploadUrlsByTargetEnvironment = {
+          local: `http://localhost:5002${uploadEndPointPath}`,
+          stage: `https://papi-stage.zettel.ooo${uploadEndPointPath}`,
+          live: `https://papi.zettel.ooo${uploadEndPointPath}`,
+        }
+        const targetEnvironment = process.env.ZETTEL_TARGET_ENVIRONMENT
+        const developerAccessKey = process.env.ZETTEL_DEVELOPER_ACCESS_KEY
+        if (!targetEnvironment || !(targetEnvironment in uploadUrlsByTargetEnvironment)) {
+          console.error(
+            `Environment variable ZETTEL_TARGET_ENVIRONMENT must be set to either "${Object.keys(
+              uploadUrlsByTargetEnvironment
+            ).join('", "')}".`
+          )
+          process.exit(1)
+        }
+        if (!developerAccessKey) {
+          console.error(
+            'Environment variable ZETTEL_DEVELOPER_ACCESS_KEY must be set. Generate one in your Zettel Developer Console.'
+          )
+          process.exit(1)
+        }
+        const rootPath = path.join(process.cwd(), args.r || defaultConfig.paths.root)
+        const outPath = path.join(rootPath, args.o || defaultConfig.paths.out)
+        const { FormData } = await import('formdata-node')
+        const { default: fetch } = await import('node-fetch')
+        const formData = new FormData()
+        formData.set('packed', fs.createReadStream(path.join(outPath, 'packed.zip')))
+        const response = await fetch(uploadUrlsByTargetEnvironment[targetEnvironment], {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Developer-Access-Key': developerAccessKey,
+          },
+        })
+        if (!response.ok) {
+          const message = await response.text()
+          throw Error(message)
+        }
+        console.log(`Extension packed file "packed.zip" is uploaded to "${targetEnvironment}" successfully!`)
       } catch (error) {
         throwError(error)
       }

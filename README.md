@@ -31,6 +31,12 @@ Pack and zip extension's files:
 $ zettel-ebt pack
 ```
 
+Upload the extension's zipped file:
+
+```bash
+$ ZETTEL_TARGET_ENVIRONMENT=live ZETTEL_DEVELOPER_ACCESS_KEY=??? zettel-ebt upload
+```
+
 ## Configuration
 
 You may provide the following configuration parameters either as the CLI command flags or options in the config file; which is either `.zettelebtrc`, `.zettelebtrc.json`, `.zettelebtrc.js`, `.zettelebtrc.yml`, or `.zettelebtrc.yaml`.
