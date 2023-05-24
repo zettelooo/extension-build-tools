@@ -37,7 +37,7 @@ yargs(hideBin(process.argv))
   })
   .option('s', {
     alias: 'src-path',
-    describe: 'Source folder relative path to root, contains "extension-function.js" file, defaults to "src"',
+    describe: 'Source folder relative path to root, contains "starter.js" file, defaults to "src"',
     type: 'string',
   })
   .option('o', {
@@ -108,9 +108,9 @@ yargs(hideBin(process.argv))
 
         const zippedPack = new JSZip()
 
-        const extensionFunctionName = 'extension-function.js'
-        const extensionFunctionPath = path.join(srcPath, extensionFunctionName)
-        zippedPack.file(extensionFunctionName, await fs.promises.readFile(extensionFunctionPath))
+        const starterName = 'starter.js'
+        const starterPath = path.join(srcPath, starterName)
+        zippedPack.file(starterName, await fs.promises.readFile(starterPath))
 
         const officialDependencies = findOfficialDependencies(rootPath)
         const metadata = { officialDependencies: {} }

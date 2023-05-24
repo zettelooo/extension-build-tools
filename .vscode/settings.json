@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -17,14 +18,6 @@
     "**/node_modules": true,
     "dist": false
   },
-  "javascript.preferences.importModuleSpecifier": "relative",
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "emmet.triggerExpansionOnTab": true,
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/env": true,
-    "**/venv": true
-  },
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
@@ -33,5 +26,12 @@
     "**/venv/**": true,
     "env-*": true
   },
-  "editor.suggest.snippetsPreventQuickSuggestions": false
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/env": true,
+    "**/venv": true
+  },
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "emmet.triggerExpansionOnTab": true
 }
