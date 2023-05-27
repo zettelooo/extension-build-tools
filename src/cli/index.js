@@ -10,6 +10,7 @@ const JSZip = require('jszip')
 const path = require('path')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
+const { config } = require('./config')
 
 const rcConfig = loadRcFile('zettelebt')
 const defaultConfig = {
@@ -155,8 +156,7 @@ yargs(hideBin(process.argv))
     argv => argv,
     async args => {
       try {
-        const officialDependencyServerSharedVersion = '3.0.0'
-        const uploadEndPointPath = `/${officialDependencyServerSharedVersion}/developer/upload-extension`
+        const uploadEndPointPath = `/${config.officialDependencyServerSharedVersion}/developer/upload-extension`
         const uploadUrlsByTargetEnvironment = {
           local: `http://localhost:5002${uploadEndPointPath}`,
           stage: `https://papi-stage.zettel.ooo${uploadEndPointPath}`,
