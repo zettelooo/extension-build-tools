@@ -1,4 +1,4 @@
-const officialDependencyServerSharedVersion = '4.0.0'
+const officialDependencyServerSharedVersion = '5.0.0'
 
 const config = {
   officialDependencyServerSharedVersion,
