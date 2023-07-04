@@ -38,7 +38,7 @@ yargs(hideBin(process.argv))
   })
   .option('s', {
     alias: 'src-path',
-    describe: 'Source folder relative path to root, contains "starter.js" file, defaults to "src"',
+    describe: 'Source folder relative path to root, contains "index.js" file, defaults to "src"',
     type: 'string',
   })
   .option('o', {
@@ -109,9 +109,9 @@ yargs(hideBin(process.argv))
 
         const zippedPack = new JSZip()
 
-        const starterName = 'starter.js'
-        const starterPath = path.join(srcPath, starterName)
-        zippedPack.file(starterName, await fs.promises.readFile(starterPath))
+        const indexJsName = 'index.js'
+        const indexJsPath = path.join(srcPath, indexJsName)
+        zippedPack.file(indexJsName, await fs.promises.readFile(indexJsPath))
 
         const officialDependencies = findOfficialDependencies(rootPath)
         const metadata = { officialDependencies: {} }

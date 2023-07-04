@@ -45,7 +45,7 @@ You may provide the following configuration parameters either as the CLI command
 |---|---|---|---|
 | `paths.root` | `-r`, `--root-path` | `"."` | Project root relative path, contains `package.json` file
 | `paths.public` | `-p`, `--public-path` | `"public"` | Public folder relative path to root, contains `manifest.jsonc` file
-| `paths.src` | `-s`, `--src-path` | `"src"` | Source folder relative path to root, contains `starter.js` file
+| `paths.src` | `-s`, `--src-path` | `"src"` | Source folder relative path to root, contains `index.js` file
 | `paths.out` | `-o`, `--out-path` | `"out"` | Dist folder relative path to root, to place the packed content
 
 ## Development
