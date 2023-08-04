@@ -156,11 +156,16 @@ yargs(hideBin(process.argv))
     argv => argv,
     async args => {
       try {
+        const temporaryZettelOwners = process.env.TEMPORARY_ZETTEL_OWNERS === 'true' // A temporary solution to deal with the new VPS connectivity issue
         const uploadEndPointPath = `/${config.officialDependencyServerSharedVersion}/developer/upload-extension`
         const uploadUrlsByTargetEnvironment = {
           local: `http://localhost:5002${uploadEndPointPath}`,
-          stage: `https://papi-stage.zettel.ooo${uploadEndPointPath}`,
-          live: `https://papi.zettel.ooo${uploadEndPointPath}`,
+          stage: temporaryZettelOwners
+            ? `http://localhost:4002${uploadEndPointPath}`
+            : `https://papi-stage.zettel.ooo${uploadEndPointPath}`,
+          live: temporaryZettelOwners
+            ? `http://localhost:3002${uploadEndPointPath}`
+            : `https://papi.zettel.ooo${uploadEndPointPath}`,
         }
         const targetEnvironment = process.env.ZETTEL_TARGET_ENVIRONMENT
         const developerAccessKey = process.env.ZETTEL_DEVELOPER_ACCESS_KEY
